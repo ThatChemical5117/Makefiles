@@ -1,0 +1,71 @@
+# ==== Project Makefile Configuration ====
+# Static Lib version
+
+#Compiler and Compiler options
+CXX = g++
+CXXFLAGS = -Wall -I./include
+LDFLAGS =
+
+#Drectory used to install Application
+INSTALLDIR =/usr/local/lib
+
+# Desired Name of the final Executable
+APPNAME = "APPNAME"
+
+#Default optimization
+ifndef config
+	config=debug
+endif
+
+# gets passed from main make file
+ifeq ($(config),debug)
+	CXXFLAGS += -g
+else ifeq ($(config),optimize)
+	CXXFLAGS += -O3
+else ifeq ($(config),release)
+	CXXFLAGS += -O3
+	CXXFLAGS += -s
+endif
+
+# Source and Destination Directories for all files 
+BIN = ../libs/lib$(APPNAME).a
+OBJDIR = .obj
+DEPDIR = .dep
+SRCDIR = src
+
+# FInds the locations for Sources, Object, and dependency files
+SRC = $(wildcard $(SRCDIR)/*.cpp)
+OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
+
+# ALL rule
+all: $(BIN)
+
+# ==== Utility Function ====
+# Clean command 
+clean:
+	rm -f $(OBJ) $(DEP) $(BIN)
+
+# Unistall Step
+uninstall:
+	rm -f $(INSTALLDIR)/$(APPNAME)
+
+# install step
+install: all
+	cp -f $(BIN) $(INSTALLDIR)/$(APPNAME)
+	chmod 755 $(INSTALLDIR)/$(APPNAME)
+
+#==== Compilation Steps ====
+
+# FINAL Compliation step, produces final lib
+$(BIN): $(OBJ)
+	ar rcs $@ $^
+
+# Generates Dependency files
+$(DEPDIR)/%.d: $(SRCDIR)/%.cpp
+	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+	-include $(DEP)
+
+# Compiles all translation units, does each one individually
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -o $@ -c $<

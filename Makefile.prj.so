@@ -1,0 +1,73 @@
+#==== Project Makefile Configuration
+# Shared Lib Version
+
+# Compiler and Compiler options
+CXX = g++
+CXXFLAGS = -Wall -I./include
+LDFLAGS =
+
+# Directory use to install Application
+INSTALLDIR =/usr/local/lib
+
+# Desired name of the final executable
+APPNAME = "APPNAME"
+
+#Default optimization
+ifndef config
+	config=debug
+endif
+
+# gets passed from Workspace make file
+ifeq ($(config),debug)
+	CXXFLAGS += -g
+else ifeq ($(config),optimize)
+	CXXFLAGS += -O3
+else ifeq ($(config),release)
+	CXXFLAGS += -O3
+	CXXFLAGS += -s
+endif
+
+# Source and Destination Directoreis for all files
+BIN = ../libs/lib$(APPNAME).so
+OBJDIR = .obj
+DEPDIR = .dep
+SRCDIR = src
+
+# Finds the locations for Sources, Object file, and dependency files
+SRC = $(wildcard $(SRCDIR)/*.cpp)
+OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
+
+# ALL rule
+all: $(BIN)
+
+#==== Utility Functions ====
+# Uninstall step
+uninstall:
+	rm -f $(INSTALLDIR)/$(APPNAME)
+
+# Install step
+install: all
+	cp -f $(BIN) $(INSTALLDIR)/lib$(APPNAME).so
+	chmod 755 $(INSTALLDIR)/lib$(APPNAME).so
+
+# clean command for new compile
+clean:
+	rm -f $(OBJ) $(DEP) $(BIN)	
+
+#==== Compilation Steps ====
+
+#FINAL LINK STEP
+$(BIN): $(OBJ)
+	$(CXX) $(CXXFLAGS) -fPIC -shared -o $@ $^ $(LDFLAGS)	
+
+# Generates Dependency files
+$(DEPDIR)/%.d: $(SRCDIR)/%.cpp
+	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+	-include $(DEP)
+
+# Compiles all translation units, does each one individually
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+
