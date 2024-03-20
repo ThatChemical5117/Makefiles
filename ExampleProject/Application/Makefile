@@ -66,7 +66,8 @@ $(BIN): $(OBJ)
 # Generates Dependency Files
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
-	-include $(DEP)
+
+-include $(DEP)
 
 # Compiles all translation units, does each one individually
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
