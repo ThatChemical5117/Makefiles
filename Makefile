@@ -27,7 +27,7 @@ all: $(PROJECTS)
 # Rule can be copied, replace the name before the seperator.
 # add Static and Shared libs as dependencies.
 
-# EX
+# EXAMPLE: 
 # !!! Core is also the name of the directory that the project is in !!! 
 # Core: 
 # 	@echo "==== Building ($@) ($(Core)) ===="

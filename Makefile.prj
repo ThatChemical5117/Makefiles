@@ -10,7 +10,6 @@ LDFLAGS =
 INSTALLDIR =/usr/local/bin
 
 # Desired Name of the final Executable
-# !!! ONLY MODIFY THIS LINE !!!
 APPNAME = "APPNAME"
 
 # Default optimization
@@ -68,6 +67,7 @@ $(BIN): $(OBJ)
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
+# Tell make to use dependency file
 -include $(DEP)
 
 # Compiles all translation units, does each one individually
