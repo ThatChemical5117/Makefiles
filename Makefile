@@ -7,7 +7,7 @@ ifndef config
 endif
 
 # "REPLACEAPPNAME" should be the name of the directory the project is stored in
-# IF multiple projects, add the name of it's directory and set equal to config ( release, optimze, debug )
+# IF multiple projects, add the name of it's directory and set equal to config ( release, optimize, debug )
 ifeq ($(config),release)
 	"REPLACEAPPNAME" = release
 else ifeq ($(config),optimize)
@@ -17,15 +17,15 @@ else ifeq ($(config),debug)
 endif	
 
 #Add All project names, Project name should be the same as the Directory it is in
-# keep adding aditional project names after 
+# keep adding additional project names after 
 PROJECTS := "REPLACEAPPNAME" 
 .PHONY: all clean $(PROJECTS) uninstall install 
 
 all: $(PROJECTS)
 
-# Add idividule rules for each project with the same format,
-# Rule can be copied, replace the name before the seperator.
-# add Static and Shared libs as dependencies.
+# Add individual rules for each project with the same format,
+# Rule can be copied, replace the name before the separator.
+# add Static and Shared libraries as dependencies.
 
 # EXAMPLE: 
 # !!! Core is also the name of the directory that the project is in !!! 
@@ -42,7 +42,7 @@ all: $(PROJECTS)
 	@echo "==== Building ($@) ($("REPLACEAPPNAME")) ===="
 	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$("REPLACEAPPNAME")
 
-#add Extra rules with the same format, Use name of diretory that project is in 
+#add Extra rules with the same format, Use name of directory that project is in 
 
 install: all
 	@$(MAKE) --no-print-directory -C "REPLACEAPPNAME" -f Makefile install config=$("REPLACEAPPNAME")

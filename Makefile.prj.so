@@ -27,7 +27,7 @@ else ifeq ($(config),release)
 	CXXFLAGS += -s
 endif
 
-# Source and Destination Directoreis for all files
+# Source and Destination Directories for all files
 BIN = ../libs/lib$(APPNAME).so
 OBJDIR = .obj
 DEPDIR = .dep

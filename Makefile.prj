@@ -1,5 +1,5 @@
-# ==== Project Makefile Configurtation ====
-# ConsoleApplication Version
+# ==== Project Makefile Configuration ====
+# Console Application Version
 
 # Compiler and Compiler options
 CXX = g++
@@ -27,7 +27,7 @@ else ifeq ($(config),release)
 	CXXFLAGS += -s
 endif
 
-# Source and Destination Directorys for all files
+# Source and Destination Directory for all files
 BIN = ../bin/$(APPNAME)
 OBJDIR = .obj
 DEPDIR = .dep

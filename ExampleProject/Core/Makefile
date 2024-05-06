@@ -6,7 +6,7 @@ CXX = g++
 CXXFLAGS = -Wall -I./include
 LDFLAGS =
 
-#Drectory used to install Application
+#Directory used to install Application
 INSTALLDIR =/usr/local/lib
 
 # Desired Name of the final Executable
@@ -33,7 +33,7 @@ OBJDIR = .obj
 DEPDIR = .dep
 SRCDIR = src
 
-# FInds the locations for Sources, Object, and dependency files
+# Finds the locations for Sources, Object, and dependency files
 SRC = $(wildcard $(SRCDIR)/*.cpp)
 OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
@@ -46,7 +46,7 @@ all: $(BIN)
 clean:
 	rm -f $(OBJ) $(DEP) $(BIN)
 
-# Unistall Step
+# Uninstall Step
 uninstall:
 	rm -f $(INSTALLDIR)/$(APPNAME)
 
@@ -57,7 +57,7 @@ install: all
 
 #==== Compilation Steps ====
 
-# FINAL Compliation step, produces final lib
+# FINAL Compilation step, produces final lib
 $(BIN): $(OBJ)
 	ar rcs $@ $^
 
