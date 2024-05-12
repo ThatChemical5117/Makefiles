@@ -6,16 +6,6 @@ ifndef config
 	config = debug
 endif
 
-# "REPLACEAPPNAME" should be the name of the directory the project is stored in
-# IF multiple projects, add the name of it's directory and set equal to config ( release, optimize, debug )
-ifeq ($(config),release)
-	"REPLACEAPPNAME" = release
-else ifeq ($(config),optimize)
-	"REPLACEAPPNAME" = optimize
-else ifeq ($(config),debug)
-	"REPLACEAPPNAME" = debug
-endif	
-
 #Add All project names, Project name should be the same as the Directory it is in
 # keep adding additional project names after 
 PROJECTS := "REPLACEAPPNAME" 
@@ -31,21 +21,21 @@ all: $(PROJECTS)
 # !!! Core is also the name of the directory that the project is in !!! 
 # Core: 
 # 	@echo "==== Building ($@) ($(Core)) ===="
-#	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(Core)
+#	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config)
 #
 # !!! NOTE: Application depends on Core to be built before compiling !!!
 # Application: Core
 # 	@echo "==== Building ($@) ($(Application)) ===="
-#	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(Application)
+#	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config)
 
 "REPLACEAPPNAME": 
-	@echo "==== Building ($@) ($("REPLACEAPPNAME")) ===="
-	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$("REPLACEAPPNAME")
+	@echo "==== Building ($@) ($(config)) ===="
+	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config)
 
 #add Extra rules with the same format, Use name of directory that project is in 
 
 install: all
-	@$(MAKE) --no-print-directory -C "REPLACEAPPNAME" -f Makefile install config=$("REPLACEAPPNAME")
+	@$(MAKE) --no-print-directory -C "REPLACEAPPNAME" -f Makefile install config=$(config)
 
 uninstall:
 	@$(MAKE) --no-print-directory -C "REPLACEAPPNAME" -f Makefile uninstall

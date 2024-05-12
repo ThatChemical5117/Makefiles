@@ -1,7 +1,7 @@
 # ==== Project Makefile Configuration ====
 # Console Application Version
 
-# Compiler and Compiler options
+# Compiler and Compiler options, EDIT as needed
 CXX = g++
 CXXFLAGS = -Wall -I./include 
 LDFLAGS = 
@@ -12,19 +12,14 @@ INSTALLDIR =/usr/local/bin
 # Desired Name of the final Executable
 APPNAME = "APPNAME"
 
-# Default optimization
-ifndef config
-	config=debug
-endif
-
 # gets passed from main make file
-ifeq ($(config),debug)
-	CXXFLAGS += -g
-else ifeq ($(config),optimize)
+ifeq ($(config),optimize)
 	CXXFLAGS += -O3
 else ifeq ($(config),release)
 	CXXFLAGS += -O3
 	CXXFLAGS += -s
+else
+	CXXFLAGS += -g
 endif
 
 # Source and Destination Directory for all files

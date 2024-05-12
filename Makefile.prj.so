@@ -12,19 +12,14 @@ INSTALLDIR =/usr/local/lib
 # Desired name of the final executable
 APPNAME = "APPNAME"
 
-#Default optimization
-ifndef config
-	config=debug
-endif
-
 # gets passed from Workspace make file
-ifeq ($(config),debug)
-	CXXFLAGS += -g
-else ifeq ($(config),optimize)
+ifeq ($(config),optimize)
 	CXXFLAGS += -O3
 else ifeq ($(config),release)
 	CXXFLAGS += -O3
 	CXXFLAGS += -s
+else
+	CXXFLAGS += -g
 endif
 
 # Source and Destination Directories for all files

@@ -7,11 +7,11 @@ Starter configurations to generate binaries, static libraries, and Shared Object
 These make files are for use in c++ projects. Can be used in c but would need to be modified
 
 For use in
-- Multiple projects in one work space
-- Projects that link to each other 
+- Small projects
+- Multiple projects that share a working directory
+- Multiple projects that need to link to each other
 
-This project does not deal with multiple compile targets and cross compiling
-
+These make files scale with the projects with automatic source detection and dependency generation.
 
 ### Usage
 
