@@ -23,10 +23,10 @@ else
 endif
 
 # Source and Destination Directories for all files
-BIN = ../libs/lib$(APPNAME).so
-OBJDIR = .obj
-DEPDIR = .dep
-SRCDIR = src
+BIN = ./libs/lib$(APPNAME).so
+OBJDIR = $(WRKDIR)/.obj
+DEPDIR = $(WRKDIR)/.dep
+SRCDIR = $(WRKDIR)/src
 
 # Finds the locations for Sources, Object file, and dependency files
 SRC = $(wildcard $(SRCDIR)/*.cpp)

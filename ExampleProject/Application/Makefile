@@ -1,10 +1,10 @@
 # ==== Project Makefile Configuration ====
 # Console Application Version
 
-# Compiler and Compiler options
+# Compiler and Compiler options, EDIT as needed
 CXX = g++
-CXXFLAGS = -Wall -I./include -I../Core/include 
-LDFLAGS = -L../libs -lCore 
+CXXFLAGS = -Wall -I./$(WRKDIR)/include -I./Core/include
+LDFLAGS = -L./libs -lCore 
 
 # Directory used to install Application
 INSTALLDIR =/usr/local/bin
@@ -12,26 +12,21 @@ INSTALLDIR =/usr/local/bin
 # Desired Name of the final Executable
 APPNAME = app
 
-# Default optimization
-ifndef config
-	config=debug
-endif
-
 # gets passed from main make file
-ifeq ($(config),debug)
-	CXXFLAGS += -g
-else ifeq ($(config),optimize)
+ifeq ($(config),optimize)
 	CXXFLAGS += -O3
 else ifeq ($(config),release)
 	CXXFLAGS += -O3
 	CXXFLAGS += -s
+else
+	CXXFLAGS += -g
 endif
 
 # Source and Destination Directory for all files
-BIN = ../bin/$(APPNAME)
-OBJDIR = .obj
-DEPDIR = .dep
-SRCDIR = src
+BIN = ./bin/$(APPNAME)
+OBJDIR = $(WRKDIR)/.obj
+DEPDIR = $(WRKDIR)/.dep
+SRCDIR = $(WRKDIR)/src
 
 # Finds the locations for Sources, Object, and dependency files
 SRC = $(wildcard $(SRCDIR)/*.cpp)
@@ -67,6 +62,7 @@ $(BIN): $(OBJ)
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
+# Tell make to use dependency file
 -include $(DEP)
 
 # Compiles all translation units, does each one individually

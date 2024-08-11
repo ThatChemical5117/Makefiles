@@ -6,22 +6,9 @@ ifndef config
 	config = debug
 endif
 
-# Core should be the name of the directory the project is stored in
-# IF multiple projects, add the name of it's directory and set equal to config ( release, optimize, debug )
-ifeq ($(config),release)
-	Core = release
-	Application = release
-else ifeq ($(config),optimize)
-	Core = optimize
-	Application = optimize
-else ifeq ($(config),debug)
-	Core = debug
-	Application = debug
-endif	
-
 #Add All project names, Project name should be the same as the Directory it is in
 # keep adding additional project names after 
-PROJECTS := Core Application 
+PROJECTS := Application Core
 .PHONY: all clean $(PROJECTS) uninstall install 
 
 all: $(PROJECTS)
@@ -29,24 +16,39 @@ all: $(PROJECTS)
 # Add individual rules for each project with the same format,
 # Rule can be copied, replace the name before the separator.
 # add Static and Shared libraries as dependencies.
-Core: 
-	@echo "==== Building ($@) ($(Core)) ===="
-	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(Core)
+
+# EXAMPLE: 
+# !!! Core is also the name of the directory that the project is in !!! 
+# Core: 
+# 	@echo "==== Building ($@) ($(Core)) ===="
+#	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config)
+#
+# !!! NOTE: Application depends on Core to be built before compiling !!!
+# Application: Core
+# 	@echo "==== Building ($@) ($(Application)) ===="
+#	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config) WRKDIR=$(@)
+
+
+Core:
+	@echo "==== Building ($@) ($(config)) ===="
+	@$(MAKE) --no-print-directory -f $(@)/Makefile config=$(config) WRKDIR=$(@)
 
 
 Application: Core
-	@echo "==== Building ($@) ($(Application)) ==== "
-	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(Application)
+	@echo "==== Building ($@) ($(config)) ===="
+	@$(MAKE) --no-print-directory -f $(@)/Makefile config=$(config) WRKDIR=$(@)
 
 #add Extra rules with the same format, Use name of directory that project is in 
 
 install: all
-	@$(MAKE) --no-print-directory -C Application -f Makefile install config=$(Core)
+	@$(MAKE) --no-print-directory -f Application/Makefile install config=$(config) WRKDIR=Application
+	@$(MAKE) --no-print-directory -f Core/Makefile install config=$(config) WRKDIR=Core
 
 uninstall:
-	@$(MAKE) --no-print-directory -C Application -f Makefile uninstall
+	@$(MAKE) --no-print-directory -f Application/Makefile uninstall WRKDIR=Application
+	@$(MAKE) --no-print-directory -f Core/Makefile uninstall WRKDIR=Core
 
 # add a line for each project, use Directory name
 clean:
-	@${MAKE} --no-print-directory -C Core -f Makefile clean
-	@${MAKE} --no-print-directory -C Application -f Makefile clean
+	@${MAKE} --no-print-directory -f Application/Makefile clean WRKDIR=Application
+	@${MAKE} --no-print-directory -f Core/Makefile clean WRKDIR=Core

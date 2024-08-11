@@ -26,20 +26,20 @@ all: $(PROJECTS)
 # !!! NOTE: Application depends on Core to be built before compiling !!!
 # Application: Core
 # 	@echo "==== Building ($@) ($(Application)) ===="
-#	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config)
+#	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config) WRKDIR=$(@)
 
 "REPLACEAPPNAME": 
 	@echo "==== Building ($@) ($(config)) ===="
-	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config)
+	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config) WRKDIR=$(@)
 
 #add Extra rules with the same format, Use name of directory that project is in 
 
 install: all
-	@$(MAKE) --no-print-directory -C "REPLACEAPPNAME" -f Makefile install config=$(config)
+	@$(MAKE) --no-print-directory -f "REPLACEAPPNAME"/Makefile install config=$(config) WRKDIR="REPLACEAPPNAME"
 
 uninstall:
-	@$(MAKE) --no-print-directory -C "REPLACEAPPNAME" -f Makefile uninstall
+	@$(MAKE) --no-print-directory -f "REPLACEAPPNAME"/Makefile uninstall WRKDIR="REPLACEAPPNAME"
 
 # add a line for each project, use Directory name
 clean:
-	@${MAKE} --no-print-directory -C "REPLACEAPPNAME" -f Makefile clean
+	@${MAKE} --no-print-directory -f "REPLACEAPPNAME"/Makefile clean WRKDIR="REPLACEAPPNAME"

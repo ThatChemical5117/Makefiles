@@ -3,7 +3,7 @@
 
 #Compiler and Compiler options
 CXX = g++
-CXXFLAGS = -Wall -I./include
+CXXFLAGS = -Wall -I./$(WRKDIR)/include
 LDFLAGS =
 
 #Directory used to install Application
@@ -18,20 +18,20 @@ ifndef config
 endif
 
 # gets passed from main make file
-ifeq ($(config),debug)
-	CXXFLAGS += -g
-else ifeq ($(config),optimize)
+ifeq ($(config),optimize)
 	CXXFLAGS += -O3
 else ifeq ($(config),release)
 	CXXFLAGS += -O3
 	CXXFLAGS += -s
+else
+	CXXFLAGS += -g
 endif
 
 # Source and Destination Directories for all files 
-BIN = ../libs/lib$(APPNAME).a
-OBJDIR = .obj
-DEPDIR = .dep
-SRCDIR = src
+BIN = ./libs/lib$(APPNAME).a
+OBJDIR = $(WRKDIR)/.obj
+DEPDIR = $(WRKDIR)/.dep
+SRCDIR = $(WRKDIR)/src
 
 # Finds the locations for Sources, Object, and dependency files
 SRC = $(wildcard $(SRCDIR)/*.cpp)
@@ -64,6 +64,7 @@ $(BIN): $(OBJ)
 # Generates Dependency files
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+
 -include $(DEP)
 
 # Compiles all translation units, does each one individually
