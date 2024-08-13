@@ -22,11 +22,12 @@ else
 	CXXFLAGS += -g
 endif
 
+
 # Source and Destination Directory for all files
 BIN = ./bin/$(APPNAME)
-OBJDIR = $(WRKDIR)/.obj
-DEPDIR = $(WRKDIR).dep
-SRCDIR = $(WRKDIR)src
+OBJDIR = .obj
+DEPDIR = .dep
+SRCDIR = src
 
 # Finds the locations for Sources, Object, and dependency files
 SRC = $(wildcard $(SRCDIR)/*.cpp)
@@ -56,10 +57,12 @@ install: all
 
 # FINAL Compilation step, produces final binary
 $(BIN): $(OBJ)
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 # Generates Dependency Files
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
+	@mkdir -p $(@D)
 	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 # Tell make to use dependency file
@@ -67,4 +70,5 @@ $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 
 # Compiles all translation units, does each one individually
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
