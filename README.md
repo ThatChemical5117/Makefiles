@@ -27,7 +27,7 @@ For other build systems I do recommend Premake to generate the build system
 Using the make files is simple. Using the ExampleProject directory provided with this repo we can see the intended use
 
 We see the structure of the project here
-
+```bash
 ExampleProject/
 ├── Application/
 │   ├── Makefile
@@ -41,6 +41,7 @@ ExampleProject/
 │   └── src/
 │       └── MathLibrary.cpp
 └── Makefile
+```
 
 We have two Project directories, Application and Core
 Application generates the main executable while Core generates a static library that is used by Application
