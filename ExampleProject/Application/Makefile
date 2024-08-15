@@ -1,32 +1,33 @@
 # ==== Project Makefile Configuration ====
 # Console Application Version
+#
+# gets passed from main make file
+ifeq ($(config),Optimize)
+	CXXFLAGS += -O3
+else ifeq ($(config),Release)
+	CXXFLAGS += -O3
+	CXXFLAGS += -s
+else
+	config=Debug
+	CXXFLAGS += -g
+endif
 
 # Compiler and Compiler options, EDIT as needed
 CXX = g++
-CXXFLAGS = -Wall -I./$(WRKDIR)/include -I./Core/include
-LDFLAGS = -L./libs -lCore 
+CXXFLAGS += -Wall -I./include -I../Core/include
+LDFLAGS = -L../$(config) -lCore
 
 # Directory used to install Application
 INSTALLDIR =/usr/local/bin
 
 # Desired Name of the final Executable
-APPNAME = app
-
-# gets passed from main make file
-ifeq ($(config),optimize)
-	CXXFLAGS += -O3
-else ifeq ($(config),release)
-	CXXFLAGS += -O3
-	CXXFLAGS += -s
-else
-	CXXFLAGS += -g
-endif
+APPNAME = application
 
 # Source and Destination Directory for all files
-BIN = ./bin/$(APPNAME)
-OBJDIR = $(WRKDIR)/.obj
-DEPDIR = $(WRKDIR)/.dep
-SRCDIR = $(WRKDIR)/src
+BIN = ../$(config)/$(APPNAME)
+OBJDIR = .obj
+DEPDIR = .dep
+SRCDIR = src
 
 # Finds the locations for Sources, Object, and dependency files
 SRC = $(wildcard $(SRCDIR)/*.cpp)
@@ -56,15 +57,18 @@ install: all
 
 # FINAL Compilation step, produces final binary
 $(BIN): $(OBJ)
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 # Generates Dependency Files
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
-	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+	@mkdir -p $(@D)
+	@$(CPP) $(CXXFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 # Tell make to use dependency file
 -include $(DEP)
 
 # Compiles all translation units, does each one individually
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -o $@ -c $<

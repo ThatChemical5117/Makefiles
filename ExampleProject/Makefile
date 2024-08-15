@@ -3,7 +3,7 @@
 
 # configuration default
 ifndef config
-	config = debug
+	config = Debug
 endif
 
 #Add All project names, Project name should be the same as the Directory it is in
@@ -17,38 +17,26 @@ all: $(PROJECTS)
 # Rule can be copied, replace the name before the separator.
 # add Static and Shared libraries as dependencies.
 
-# EXAMPLE: 
-# !!! Core is also the name of the directory that the project is in !!! 
-# Core: 
-# 	@echo "==== Building ($@) ($(Core)) ===="
-#	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config)
-#
-# !!! NOTE: Application depends on Core to be built before compiling !!!
-# Application: Core
-# 	@echo "==== Building ($@) ($(Application)) ===="
-#	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config) WRKDIR=$(@)
-
-
 Core:
 	@echo "==== Building ($@) ($(config)) ===="
-	@$(MAKE) --no-print-directory -f $(@)/Makefile config=$(config) WRKDIR=$(@)
+	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config)
 
 
 Application: Core
 	@echo "==== Building ($@) ($(config)) ===="
-	@$(MAKE) --no-print-directory -f $(@)/Makefile config=$(config) WRKDIR=$(@)
+	@$(MAKE) --no-print-directory -C $@ -f Makefile config=$(config)
 
 #add Extra rules with the same format, Use name of directory that project is in 
 
 install: all
-	@$(MAKE) --no-print-directory -f Application/Makefile install config=$(config) WRKDIR=Application
-	@$(MAKE) --no-print-directory -f Core/Makefile install config=$(config) WRKDIR=Core
+	@$(MAKE) --no-print-directory -C Application -f Makefile install config=$(config)
+	@$(MAKE) --no-print-directory -C Core -f Makefile install config=$(config)
 
 uninstall:
-	@$(MAKE) --no-print-directory -f Application/Makefile uninstall WRKDIR=Application
-	@$(MAKE) --no-print-directory -f Core/Makefile uninstall WRKDIR=Core
+	@$(MAKE) --no-print-directory -C Application -f Makefile uninstall 
+	@$(MAKE) --no-print-directory -C Core -f Makefile uninstall 
 
 # add a line for each project, use Directory name
 clean:
-	@${MAKE} --no-print-directory -f Application/Makefile clean WRKDIR=Application
-	@${MAKE} --no-print-directory -f Core/Makefile clean WRKDIR=Core
+	@${MAKE} --no-print-directory -C Application -f Makefile clean
+	@${MAKE} --no-print-directory -C Core -f Makefile clean

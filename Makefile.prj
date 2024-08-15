@@ -1,9 +1,20 @@
 # ==== Project Makefile Configuration ====
 # Console Application Version
 
+# from external file
+ifeq ($(config),Optimize)
+	CXXFLAGS += -O3
+else ifeq ($(config),Release)
+	CXXFLAGS += -O3
+	CXXFLAGS += -s
+else
+	config=Debug
+	CXXFLAGS += -g
+endif
+
 # Compiler and Compiler options, EDIT as needed
 CXX = g++
-CXXFLAGS = -Wall -I./include 
+CXXFLAGS += -Wall -I./include 
 LDFLAGS = 
 
 # Directory used to install Application
@@ -12,19 +23,8 @@ INSTALLDIR =/usr/local/bin
 # Desired Name of the final Executable
 APPNAME = "APPNAME"
 
-# gets passed from main make file
-ifeq ($(config),optimize)
-	CXXFLAGS += -O3
-else ifeq ($(config),release)
-	CXXFLAGS += -O3
-	CXXFLAGS += -s
-else
-	CXXFLAGS += -g
-endif
-
-
 # Source and Destination Directory for all files
-BIN = ./bin/$(APPNAME)
+BIN = ../$(config)/$(APPNAME)
 OBJDIR = .obj
 DEPDIR = .dep
 SRCDIR = src
@@ -63,7 +63,7 @@ $(BIN): $(OBJ)
 # Generates Dependency Files
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@mkdir -p $(@D)
-	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+	@$(CPP) $(CXXFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 # Tell make to use dependency file
 -include $(DEP)

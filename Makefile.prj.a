@@ -1,9 +1,20 @@
 # ==== Project Makefile Configuration ====
 # Static Lib version
 
+# gets passed from main make file
+ifeq ($(config),Optimize)
+	CXXFLAGS += -O3
+else ifeq ($(config),Release)
+	CXXFLAGS += -O3
+	CXXFLAGS += -s
+else
+	config=Debug
+	CXXFLAGS += -g
+endif
+
 #Compiler and Compiler options
 CXX = g++
-CXXFLAGS = -Wall -I./include
+CXXFLAGS += -Wall -I./include
 LDFLAGS =
 
 #Directory used to install Application
@@ -12,18 +23,8 @@ INSTALLDIR =/usr/local/lib
 # Desired Name of the final Executable
 APPNAME = "APPNAME"
 
-# gets passed from main make file
-ifeq ($(config),optimize)
-	CXXFLAGS += -O3
-else ifeq ($(config),release)
-	CXXFLAGS += -O3
-	CXXFLAGS += -s
-else
-	CXXFLAGS += -g
-endif
-
 # Source and Destination Directories for all files 
-BIN = ./libs/lib$(APPNAME).a
+BIN = ../$(config)/lib$(APPNAME).a
 OBJDIR = .obj
 DEPDIR = .dep
 SRCDIR = src
@@ -60,7 +61,7 @@ $(BIN): $(OBJ)
 # Generates Dependency files
 $(DEPDIR)/%.d: $(SRCDIR)/%.cpp
 	@mkdir -p $(@D)
-	@$(CPP) $(CFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
+	@$(CPP) $(CXXFLAGS) $< -MM -MT $(@:$(DEPDIR)/%.d=$(OBJDIR)/%.o) >$@
 
 -include $(DEP)
 

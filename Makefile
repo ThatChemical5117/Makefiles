@@ -3,7 +3,7 @@
 
 # configuration default
 ifndef config
-	config = debug
+	config = Debug
 endif
 
 #Add All project names, Project name should be the same as the Directory it is in
