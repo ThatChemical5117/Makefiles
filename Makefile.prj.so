@@ -2,29 +2,26 @@
 # Shared Lib Version
 
 # gets passed from Workspace make file
-ifeq ($(config),Optimize)
+ifeq ($(config),optimize)
 	CXXFLAGS += -O3
-else ifeq ($(config),Release)
+else ifeq ($(config),dist)
 	CXXFLAGS += -O3
 	CXXFLAGS += -s
 else
-	config=Debug
+	config=debug
 	CXXFLAGS += -g
+	CXXFLAGS += -DDEBUG
 endif
-
-# Compiler and Compiler options
-CXX = g++
-CXXFLAGS += -Wall -I./include
-LDFLAGS =
 
 # Directory use to install Application
 INSTALLDIR =/usr/local/lib
 
 # Desired name of the final executable
-APPNAME = "APPNAME"
+APPNAME = "REPLACEME"
 
 # Source and Destination Directories for all files
-BIN = ../$(config)/lib$(APPNAME).so
+BINDIR = ../bin/$(config)-$(APPNAME)
+BIN = $(BINDIR)/lib$(APPNAME).so
 OBJDIR = .obj
 DEPDIR = .dep
 SRCDIR = src
@@ -33,6 +30,11 @@ SRCDIR = src
 SRC = $(wildcard $(SRCDIR)/*.cpp)
 OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
+
+# Compiler and Compiler options
+CXX = g++
+CXXFLAGS += -Wall -I./include
+LDFLAGS = 
 
 # ALL rule
 all: $(BIN)

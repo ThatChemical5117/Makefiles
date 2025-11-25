@@ -1,38 +1,40 @@
 # ==== Project Makefile Configuration ====
 # Console Application Version
-#
-# gets passed from main make file
-ifeq ($(config),Optimize)
+
+# from external file
+ifeq ($(config),optimize)
 	CXXFLAGS += -O3
-else ifeq ($(config),Release)
+else ifeq ($(config),dist)
 	CXXFLAGS += -O3
 	CXXFLAGS += -s
 else
-	config=Debug
+	config=debug
 	CXXFLAGS += -g
+	CXXFLAGS += -DDEBUG
 endif
-
-# Compiler and Compiler options, EDIT as needed
-CXX = g++
-CXXFLAGS += -Wall -I./include -I../Core/include
-LDFLAGS = -L../$(config) -lCore
-
 # Directory used to install Application
 INSTALLDIR =/usr/local/bin
 
 # Desired Name of the final Executable
-APPNAME = application
+APPNAME = App
 
 # Source and Destination Directory for all files
-BIN = ../$(config)/$(APPNAME)
+BINDIR = ../bin/$(config)
+BIN = $(BINDIR)/$(APPNAME)
 OBJDIR = .obj
 DEPDIR = .dep
 SRCDIR = src
-
+#
 # Finds the locations for Sources, Object, and dependency files
 SRC = $(wildcard $(SRCDIR)/*.cpp)
 OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
+
+# Compiler and Compiler options
+CXX = g++
+CXXFLAGS += -Wall -I./include -I../Core/include
+LDFLAGS = -L../bin/$(config) -lCore
+
 
 # ALL rule
 all: $(BIN)

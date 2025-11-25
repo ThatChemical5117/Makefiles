@@ -3,12 +3,11 @@
 
 int main()
 {
-    std::cout << "Hello World" << std::endl;
+	std::cout << "12 + -3.1" << std::endl;
+    double additionResult = MathLibrary::Arithmetic::Add(12, -3.1);
+    std::cout << "Result of addition: " << additionResult << std::endl;
 
-    double additionResault = MathLibrary::Arithmetic::Add(12, -3.1);
-
-    double subtrationResault = MathLibrary::Arithmetic::Subtract(-2.13, 14);
-
-    std::cout << "Resault of addition: " << additionResault << std::endl;
-    std::cout << "Resault of subtration: " << subtrationResault << std::endl;
+	std::cout << "-2.13 - 14" << std::endl;
+    double subtractionResult = MathLibrary::Arithmetic::Subtract(-2.13, 14);
+    std::cout << "Result of subtraction: " << subtractionResult << std::endl;
 }

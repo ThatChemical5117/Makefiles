@@ -1,26 +1,22 @@
 # Makefiles
 
-This project creates template Makefiles to quickly setup one or multiple "Project"/s in one directory
-similarly to Visual Studio Workspaces and Projects
+This project creates template Makefiles to quickly setup one or multiple "Project"/s in one directory similarly to Visual Studio Workspaces and Projects
 
 A Project contains all the source and headers files to create either a executable, static library, or shared (dynamic) library.
 The Makefiles allow for auto detection of source files and auto generation of dependencies.
 
 #### Features
 
-- Auto source detection
-- Auto dependency generation
+- Automatic source detection
+- Automatic dependency generation
 - Minimal setup for multiple Projects that depend on each other
-- Great even with just standalone projects
+- Easy copy and 
 
 #### Why would I use this?
 
-I made these Makefiles to streamline the process of setting up simple projects, eventually it evolved to include more features like
-install, uninstall, dependency generation, and project linking
+I made these Makefiles to streamline the process of setting up simple projects, eventually it evolved to include more features, including, install, uninstall, dependency generation, and project linking
 
-I never liked using Cmake, and with Premake If I wanted to add more files rebuilding the Makefiles was annoying. So creating Makefiles that can be set and forgot about was important to me.
-
-For other build systems I do recommend Premake to generate the build system
+This makefile project is Linux only
 
 #### Usage
 
@@ -43,13 +39,14 @@ ExampleProject/
 └── Makefile
 ```
 
-We have two Project directories, Application and Core
-Application generates the main executable while Core generates a static library that is used by Application
+There are two project, Application and Core. Both projects have a Makefile that is capable of compiling each project.
 
-The Makefile in the root is the Working directory Makefile that sets the dependency of each Project to each other and allows for the running of all Project Makefiles
+Application/Makefile and Core/Makefile are copies of Makefile.prj and Makefile.prj.a respectively
 
-Application/Makefile is a copy of Makefile.prj while Core/Makefile is a copy of Makefile.prj.a found in this repo
+The "workspace Makefile" is just a copy of Makefile.wrk.
 
+
+Here is the workspace Makefile config
 ``` Makefile
 #ExampleProject/Makefile
 
@@ -75,35 +72,59 @@ clean:
 	@${MAKE} --no-print-directory -C Core -f Makefile clean
 ```
 
-Here we see how the projects are linked to each other in ExampleProject/Makefile. The recipe name is also the name of the directory of the project we then change to that directory and run the Makefile that is there
-We also see for the clean recipe we need a line for each Project with the Directory name for the -C option
+Each recipe in this Makefile corresponds to the Directory name each project is in. The recipe can then find it's corresponding Makefile and generate a binary from that.
+Since Core is a static library, we make Application dependent on Core in our recipe to make sure libCore.a Exists before building Application.
+
+Under install, uninstall, and clean recipes an entry is used per project within the working directory to call the respective recipe inside the project Makefiles
 
 ```Makefile
 # ExampleProject/Application/Makefile
-
-ifeq ($(config),Optimize)
+# from external file
+ifeq ($(config),optimize)
 	CXXFLAGS += -O3
-else ifeq ($(config),Release)
+else ifeq ($(config),dist)
 	CXXFLAGS += -O3
 	CXXFLAGS += -s
 else
-	config=Debug
+	config=debug
 	CXXFLAGS += -g
+	CXXFLAGS += -DDEBUG
 endif
-
-CXX = g++
-CXXFLAGS += -Wall -I./include -I../Core/include
-LDFLAGS = -L../$(config) -lCore
-
+# Directory used to install Application
 INSTALLDIR =/usr/local/bin
 
-APPNAME = application
+# Desired Name of the final Executable
+APPNAME = App
+
+# Source and Destination Directory for all files
+BINDIR = ../bin/$(config)
+BIN = $(BINDIR)/$(APPNAME)
+OBJDIR = .obj
+DEPDIR = .dep
+SRCDIR = src
+#
+# Finds the locations for Sources, Object, and dependency files
+SRC = $(wildcard $(SRCDIR)/*.cpp)
+OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
+
+
+# Compiler and Compiler options
+CXX = g++
+CXXFLAGS += -Wall -I./include -I../Core/include
+LDFLAGS = -L../bin/$(config) -lCore
 
 ```
 
-We now see in Application/Makefile that we have some configuration options, though we only need to specify a name for the final executable
-The Makefile supports changing of flags for Optimized, Released or Debug builds, custom install directory, and compilation flags.
-We see that we can include the core static lib that is compiled along side the application. No further configuration is needed after this unless more compiler options are needed
+In Application/Makefile the first portion is used to setup compiler flags for optimization, and defines the config options for release, dist, and debug
+Alongside that, the debug config defines a DEBUG macro to help include or strip out debug code
+
+We also define the name of the application. Only this needs to be changed before compiling
+
+Optionally a location for binaries can be defined by BINDIR if the default location does not work, or needs to be different for you. 
+
+Finally we define the include and library flags for g++. Note that we need to use -L flag to show where libCore.a is since it's not in our path.
+Alternatively, you could use the install recipe to make the library available in $PATH. Same needs to be done for the header files from Core
 
 #### Running 
 

@@ -2,37 +2,40 @@
 # Console Application Version
 
 # from external file
-ifeq ($(config),Optimize)
+ifeq ($(config),optimize)
 	CXXFLAGS += -O3
-else ifeq ($(config),Release)
+else ifeq ($(config),dist)
 	CXXFLAGS += -O3
 	CXXFLAGS += -s
 else
-	config=Debug
+	config=debug
 	CXXFLAGS += -g
+	CXXFLAGS += -DDEBUG
 endif
-
-# Compiler and Compiler options, EDIT as needed
-CXX = g++
-CXXFLAGS += -Wall -I./include 
-LDFLAGS = 
-
 # Directory used to install Application
 INSTALLDIR =/usr/local/bin
 
 # Desired Name of the final Executable
-APPNAME = "APPNAME"
+APPNAME = "REPLACEME"
 
 # Source and Destination Directory for all files
-BIN = ../$(config)/$(APPNAME)
+BINDIR = ../bin/$(config)-$(APPNAME)
+BIN = $(BINDIR)/$(APPNAME)
 OBJDIR = .obj
 DEPDIR = .dep
 SRCDIR = src
-
+#
 # Finds the locations for Sources, Object, and dependency files
 SRC = $(wildcard $(SRCDIR)/*.cpp)
 OBJ = $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 DEP = $(OBJ:$(OBJDIR)/%.o=$(DEPDIR)/%.d)
+
+
+# Compiler and Compiler options
+CXX = g++
+CXXFLAGS += -Wall -I./include 
+LDFLAGS = 
+
 
 # ALL rule
 all: $(BIN)
