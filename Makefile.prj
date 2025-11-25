@@ -19,7 +19,7 @@ INSTALLDIR =/usr/local/bin
 APPNAME = "REPLACEME"
 
 # Source and Destination Directory for all files
-BINDIR = ../bin/$(config)-$(APPNAME)
+BINDIR = ../bin/$(config)
 BIN = $(BINDIR)/$(APPNAME)
 OBJDIR = .obj
 DEPDIR = .dep
