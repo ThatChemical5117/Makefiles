@@ -3,20 +3,23 @@
 This project creates template Makefiles to quickly setup one or multiple "Project"/s in one directory similarly to Visual Studio Workspaces and Projects
 
 A Project contains all the source and headers files to create either a executable, static library, or shared (dynamic) library.
-The Makefiles allow for auto detection of source files and auto generation of dependencies.
+These Makefiles allow for auto detection of source files and auto generation of dependency file (.d) if needed.
 
 #### Features
 
 - Automatic source detection
 - Automatic dependency generation
 - Minimal setup for multiple Projects that depend on each other
-- Easy copy and 
+- Easy copy and paste
 
 #### Why would I use this?
 
 I made these Makefiles to streamline the process of setting up simple projects, eventually it evolved to include more features, including, install, uninstall, dependency generation, and project linking
 
-This makefile project is Linux only
+This makefile project is Linux only currently
+I currently wish to make this project available for multiple platforms
+
+If needed use bear to create a compile_commands.json file for clangd ( This is what I do for NeoVim )
 
 #### Usage
 
