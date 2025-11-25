@@ -12,12 +12,15 @@ These Makefiles allow for auto detection of source files and auto generation of 
 - Minimal setup for multiple Projects that depend on each other
 - Easy copy and paste
 
+### Features to add
+
+- Cross platform development ( might not be possible )
+
 #### Why would I use this?
 
 I made these Makefiles to streamline the process of setting up simple projects, eventually it evolved to include more features, including, install, uninstall, dependency generation, and project linking
 
-This makefile project is Linux only currently
-I currently wish to make this project available for multiple platforms
+This makefile project is Linux only currently.
 
 If needed use bear to create a compile_commands.json file for clangd ( This is what I do for NeoVim )
 
